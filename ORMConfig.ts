@@ -1,4 +1,13 @@
 import { ConfigService } from '@nestjs/config';
+import {
+  User,
+  Game,
+  GameUser,
+  UserDraw,
+  Board,
+  BoardOrder,
+} from 'src/entities';
+
 import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
 
 const config = {
@@ -10,7 +19,7 @@ const config = {
       username: configService.get('POSTGRES_USER'),
       password: configService.get('POSTGRES_PASSWORD'),
       database: configService.get('POSTGRES_DATABASE'),
-      entities: [],
+      entities: [Board, BoardOrder, Game, GameUser, User, UserDraw],
       synchronize: true,
       ssl: true,
       extra: {
