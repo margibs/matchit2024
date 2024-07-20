@@ -3,12 +3,13 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
-import { Game, GameUser, UserDraw } from '.';
+import { Game, GameUser, Timezone, UserDraw } from '.';
 
 export enum UserRole {
   ADMIN = 'admin',
@@ -33,8 +34,8 @@ export class User {
   @Column({ length: 255 })
   password: string;
 
-  @Column({ nullable: true })
-  timezoneId: number;
+  @ManyToOne(() => Timezone, (timezone) => timezone.users, { nullable: true })
+  timezone: Timezone;
 
   @Column({
     type: 'enum',
