@@ -53,7 +53,7 @@ export class Game {
   boardPosition: 'random' | 'sequential';
 
   @Column({ nullable: true })
-  numberPicking: string;
+  numberPicking: number;
 
   @Column()
   numberPickFrequency: number;
