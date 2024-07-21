@@ -1,12 +1,22 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  Index,
+  JoinColumn,
+  ManyToOne,
+  PrimaryColumn,
+} from 'typeorm';
 import { Game, User } from '.';
 
 @Entity()
+@Index('IDX_USER_GAME', ['user', 'game']) // Composite index for user and game
 export class GameUser {
   @PrimaryColumn()
+  @Index()
   userId: number;
 
   @PrimaryColumn()
+  @Index()
   gameId: number;
 
   @Column('jsonb', { nullable: true })

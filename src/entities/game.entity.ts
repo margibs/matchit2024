@@ -2,6 +2,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  Index,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -17,6 +18,7 @@ export enum Status {
 }
 
 @Entity()
+@Index('IDX_STATUS', ['status']) // Index on status field
 export class Game {
   @PrimaryGeneratedColumn()
   id: number;
@@ -33,7 +35,7 @@ export class Game {
   @Column({
     type: 'enum',
     enum: Status,
-    default: Status.INACTIVE,
+    default: Status.ACTIVE,
   })
   status: Status;
 

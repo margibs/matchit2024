@@ -47,10 +47,10 @@ export class GameService {
 
       // Create and insert board orders
       const shuffledPositions = createShuffledPositions();
-      const boardOrders = shuffledPositions.map((position) => ({
-        position: position.position,
-        number: position.number,
-        game: game, // or use `game.id` if needed
+      const boardOrders = shuffledPositions.map((shuffledPosition) => ({
+        position: shuffledPosition.position,
+        number: shuffledPosition.number,
+        game: game,
       }));
 
       await queryRunner.manager.insert(BoardOrder, boardOrders);
@@ -86,8 +86,8 @@ export class GameService {
     });
   }
 
-  update(id: number, updateGameDto: UpdateGameDto) {
-    return `This action updates a #${id} game`;
+  async update(id: number, updateGameDto: UpdateGameDto) {
+    return this.gameRepository.update(id, updateGameDto);
   }
 
   async remove(id: number) {

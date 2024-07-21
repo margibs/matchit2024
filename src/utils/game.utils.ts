@@ -1,6 +1,9 @@
-export const createShuffledPositions = () => {
+export const createShuffledPositions = (): {
+  position: number;
+  number: number;
+}[] => {
   // Create an array of numbers from 1 to 24
-  const numbers = Array.from({ length: 24 }, (_, i) => i + 1);
+  const numbers: number[] = Array.from({ length: 24 }, (_, i) => i + 1);
 
   // Shuffle the array using the Fisher-Yates algorithm
   for (let i = numbers.length - 1; i > 0; i--) {
