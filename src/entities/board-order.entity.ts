@@ -2,6 +2,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  Index,
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -22,7 +23,11 @@ export class BoardOrder {
   @Column()
   gameId: number;
 
-  @ManyToOne(() => Game, (game) => game.boardOrders)
+  @ManyToOne(() => Game, (game) => game.boardOrders, {
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
+  @Index()
   game: Game;
 
   @CreateDateColumn()

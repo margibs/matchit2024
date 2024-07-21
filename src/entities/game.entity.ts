@@ -42,13 +42,13 @@ export class Game {
   @Column()
   duration: number;
 
-  @Column({ type: 'date', nullable: true })
+  @Column({ type: 'timestamp', nullable: true })
   startDate: Date;
 
-  @Column({ type: 'date', nullable: true })
+  @Column({ type: 'timestamp', nullable: true })
   endDate: Date;
 
-  @Column({ type: 'date', nullable: true })
+  @Column({ type: 'timestamp', nullable: true })
   pickingDate: Date;
 
   @Column({ type: 'enum', enum: ['random', 'sequential'] })
@@ -72,7 +72,9 @@ export class Game {
   @OneToMany(() => UserDraw, (userDraw) => userDraw.game)
   userDraws: UserDraw[];
 
-  @OneToMany(() => BoardOrder, (boardOrder) => boardOrder.game)
+  @OneToMany(() => BoardOrder, (boardOrder) => boardOrder.game, {
+    cascade: true,
+  })
   boardOrders: BoardOrder[];
 
   @CreateDateColumn()

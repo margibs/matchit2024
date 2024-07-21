@@ -22,6 +22,9 @@ export class GameUser {
   @Column('jsonb', { nullable: true })
   playerNumbers: number[];
 
+  @Column({ default: true })
+  isPlayerNumberChosen: boolean;
+
   @ManyToOne(() => User, (user) => user.gameUsers)
   @JoinColumn({ name: 'userId' })
   user: User;
