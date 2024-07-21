@@ -2,9 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { CreateGameDto } from './dto/create-game.dto';
 import { UpdateGameDto } from './dto/update-game.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Board, BoardOrder, Game, User } from 'src/entities';
-import { DataSource, Repository } from 'typeorm';
+import { Board, BoardOrder, Game, GameUser, Status, User } from 'src/entities';
+import { DataSource, LessThanOrEqual, MoreThan, Repository } from 'typeorm';
 import { createShuffledPositions } from 'src/utils/game.utils';
+import { CreateGameUserDto } from './dto/create-game-user.dto';
 
 @Injectable()
 export class GameService {
@@ -17,6 +18,8 @@ export class GameService {
     private readonly gameRepository: Repository<Game>,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    @InjectRepository(GameUser)
+    private readonly gameUserRepository: Repository<GameUser>,
     private readonly dataSource: DataSource,
   ) {}
   async create(createGameDto: CreateGameDto) {
@@ -27,6 +30,7 @@ export class GameService {
 
     try {
       // Fetch related entities within the transaction
+      // TODO: Replace user with current user after JWT + login implementation
       const [user, board] = await Promise.all([
         queryRunner.manager.findOne(User, { where: { id: 1 } }),
         queryRunner.manager.findOne(Board, { where: { id: 1 } }),
@@ -74,16 +78,28 @@ export class GameService {
   }
 
   async findOne(id: number) {
-    return this.gameRepository.findOne({
-      relations: [
-        'board',
-        'boardOrders',
-        'createdBy',
-        'gameUsers',
-        'userDraws',
-      ],
+    return await this.gameRepository.findOne({
+      relations: ['boardOrders', 'gameUsers'],
       where: { id },
     });
+  }
+
+  async getUserGame(id: number) {
+    // TODO: Replace user with current user after JWT + login implementation
+    const user = await this.userRepository.findOne({
+      where: { id: 1 },
+    });
+
+    const game = await this.gameRepository.findOne({
+      relations: ['boardOrders', 'gameUsers'],
+      where: { id },
+    });
+
+    const gameUser = await this.gameUserRepository.find({
+      where: { gameId: id, userId: user.id },
+    });
+
+    return { game, gameUser };
   }
 
   async update(id: number, updateGameDto: UpdateGameDto) {
@@ -92,5 +108,65 @@ export class GameService {
 
   async remove(id: number) {
     return await this.gameRepository.delete(id);
+  }
+
+  async activeGames() {
+    const now = new Date();
+
+    // const games = await this.gameRepository
+    //   .createQueryBuilder('game')
+    //   .where('game.status = :status', { status: 'active' })
+    //   .andWhere('game.pickingDate <= :now', { now })
+    //   .andWhere('game.endDate > :now', { now })
+    //   .orderBy('game.id', 'DESC')
+    //   .getMany();
+
+    const games = await this.gameRepository.find({
+      where: {
+        status: Status.ACTIVE,
+        pickingDate: LessThanOrEqual(now),
+        endDate: MoreThan(now),
+      },
+      order: {
+        id: 'DESC',
+      },
+    });
+
+    return games;
+  }
+
+  async createPlayerNumberPick(createGameUserDto: CreateGameUserDto) {
+    // TODO: Replace user with current user after JWT + login implementation
+    const user = await this.userRepository.findOne({
+      where: { id: 1 },
+    });
+
+    // Check if game exists
+    const game = await this.gameRepository.findOne({
+      where: { id: createGameUserDto.gameId },
+    });
+
+    if (!game) {
+      throw new Error('Game not found');
+    }
+
+    // Check if game is active
+    if (game.status !== Status.ACTIVE) {
+      throw new Error('Game is not active');
+    }
+
+    // Check playerNumbers length is equal to game.numberPicking
+    if (createGameUserDto.playerNumbers.length !== game.numberPicking) {
+      throw new Error('Invalid playerNumbers length');
+    }
+
+    const gameUser = this.gameUserRepository.create({
+      ...createGameUserDto,
+      user,
+      game,
+    });
+
+    await this.gameUserRepository.save(gameUser);
+    return gameUser;
   }
 }
