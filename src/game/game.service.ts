@@ -15,11 +15,15 @@ import { DataSource, Repository } from 'typeorm';
 import {
   createGameFourDrawLayout,
   createShuffledPositions,
+  formatPositionTimeMap,
+  getLocalTimeInHour,
+  getNumberDraw,
+  positionTimeMap,
 } from 'src/utils/game.utils';
 import { CreateGameUserDto } from './dto/create-game-user.dto';
 
-import { format, toZonedTime } from 'date-fns-tz';
 import * as moment from 'moment-timezone';
+import { UpdateGameUserDto } from './dto/update-game-user.dto';
 
 @Injectable()
 export class GameService {
@@ -107,39 +111,22 @@ export class GameService {
       where: { id },
     });
 
-    const gameUser = await this.gameUserRepository.find({
-      where: { gameId: id, userId: user.id },
-    });
-
-    // TODO: Get Timezone from user
-    const timeWithTimeZone = new Date().toLocaleString('en-US', {
-      timeZone: 'Asia/Manila',
-    });
-
-    const currentHour =
-      new Date(timeWithTimeZone).getHours() === 0
-        ? 24
-        : new Date(timeWithTimeZone).getHours();
-
     // get user draws check if user draws exist
     const userDraws = await this.userDrawRepository
       .createQueryBuilder('userDraw')
       .where('userDraw.gameId = :gameId', { gameId: game.id })
       .andWhere('userDraw.userId = :userId', { userId: user.id })
-      .andWhere('userDraw.drawTime = :drawTime', { drawTime: currentHour })
       .orderBy('userDraw.id', 'DESC')
       .limit(4)
       .getMany();
 
-    const numberDraws = [
-      userDraws[0]?.numberDraw,
-      userDraws[1]?.numberDraw,
-      userDraws[2]?.numberDraw,
-      userDraws[3]?.numberDraw,
-    ];
+    // TODO: Replace timezone with user timezone
+    const userLocalHour = getLocalTimeInHour('Asia/Manila');
+    // const userLocalHour = getLocalTimeInHour('Europe/Berlin');
 
-    // return userDraws;
-    return createGameFourDrawLayout(currentHour, numberDraws);
+    const currentHour = +userLocalHour === 0 ? 24 : +userLocalHour;
+
+    return createGameFourDrawLayout(currentHour, userDraws);
   }
 
   async update(id: number, updateGameDto: UpdateGameDto) {
@@ -216,5 +203,70 @@ export class GameService {
 
     await this.gameUserRepository.save(gameUser);
     return gameUser;
+  }
+
+  async createPlayerDraw(updateGameUserDto: UpdateGameUserDto) {
+    // TODO: Replace user with current user after JWT + login implementation
+    const user = await this.userRepository.findOne({
+      where: { id: 1 },
+    });
+
+    // Check game exist
+    const game = await this.gameRepository.findOne({
+      relations: ['boardOrders'],
+      where: { id: updateGameUserDto.gameId },
+    });
+
+    // Get User Current Local Hour
+    // TODO: Replace timezone with user timezone
+    const currentHour = getLocalTimeInHour('Asia/Manila');
+
+    // Get all the userDraws for this tgame
+    const userDraws = await this.userDrawRepository.find({
+      where: { gameId: game.id, userId: user.id },
+    });
+
+    // Get playerNumbers
+    const gameUser = await this.gameUserRepository.findOne({
+      where: { gameId: game.id, userId: user.id },
+    });
+
+    // Check if currentHour is not in userDraws
+    if (!userDraws.find((userDraw) => userDraw.drawTime === +currentHour)) {
+      const numberDraw = getNumberDraw(userDraws, game.randomRepeatAllowed);
+
+      // Get boardPosition from board orders
+      const boardPosition = game.boardOrders.find(
+        (boardOrder) => boardOrder.number === +numberDraw,
+      ).position;
+
+      // check if gameUser playerNumber has match
+      const isMatch = gameUser.playerNumbers.includes(+numberDraw);
+
+      const userDraw = this.userDrawRepository.create({
+        numberDraw,
+        drawTime: +currentHour,
+        boardPosition,
+        isDraw: true,
+        drawAt: new Date(),
+        isMatch,
+        user,
+        game,
+      });
+
+      await this.userDrawRepository.save(userDraw);
+
+      return {
+        data: {
+          ...formatPositionTimeMap(positionTimeMap[+currentHour], numberDraw),
+          isMatch,
+        },
+        message: 'Draw created successfully',
+      };
+
+      //TODO: Check for Winnings
+    }
+
+    return { message: 'Already drawn' };
   }
 }

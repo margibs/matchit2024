@@ -1,3 +1,6 @@
+import * as moment from 'moment-timezone';
+import { UserDraw } from 'src/entities';
+
 export const createShuffledPositions = (): {
   position: number;
   number: number;
@@ -161,7 +164,7 @@ export const timeMapWeekly = [8, 14, 20, 2];
 
 export const createGameFourDrawLayout = (
   currentHour: number,
-  values: number[],
+  userDraws: UserDraw[],
 ) => {
   const timeIndex = timeMapDaily.indexOf(currentHour);
   const currentHourConverter = [24, 25, 26, 27];
@@ -179,7 +182,7 @@ export const createGameFourDrawLayout = (
       {
         label: '08:01 AM',
         position: 1,
-        value: values[0] ?? null,
+        value: getUserDrawNumberDraw(userDraws, 8),
         currentHour: true,
       },
       {
@@ -203,12 +206,12 @@ export const createGameFourDrawLayout = (
       {
         label: '08:01 AM',
         position: 1,
-        value: values[1] ?? null,
+        value: getUserDrawNumberDraw(userDraws, 8),
       },
       {
         label: '09:01 AM',
         position: 2,
-        value: values[0] ?? null,
+        value: getUserDrawNumberDraw(userDraws, 9),
         currentHour: true,
       },
       {
@@ -227,17 +230,17 @@ export const createGameFourDrawLayout = (
       {
         label: '08:01 AM',
         position: 1,
-        value: values[2] ?? null,
+        value: getUserDrawNumberDraw(userDraws, 8),
       },
       {
         label: '09:01 AM',
         position: 2,
-        value: values[1] ?? null,
+        value: getUserDrawNumberDraw(userDraws, 9),
       },
       {
         label: '10:01 AM',
         position: 3,
-        value: values[0] ?? null,
+        value: getUserDrawNumberDraw(userDraws, 10),
         currentHour: true,
       },
       {
@@ -263,19 +266,26 @@ export const createGameFourDrawLayout = (
         ? currentHourReverseConverter[manipulatedCurrentHour - 3]
         : manipulatedCurrentHour - 3;
 
-    console.debug(
-      { currentHour, result1, result2, result3 },
-      currentHourReverseConverter[manipulatedCurrentHour - 1],
-      manipulatedCurrentHour - 1,
-    );
     output = [
       {
-        ...formatPositionTimeMap(positionTimeMap[currentHour], values[0]),
+        ...formatPositionTimeMap(
+          positionTimeMap[currentHour],
+          getUserDrawNumberDraw(userDraws, currentHour),
+        ),
         currentHour: true,
       },
-      formatPositionTimeMap(positionTimeMap[result1], values[1]),
-      formatPositionTimeMap(positionTimeMap[result2], values[2]),
-      formatPositionTimeMap(positionTimeMap[result3], values[3]),
+      formatPositionTimeMap(
+        positionTimeMap[result1],
+        getUserDrawNumberDraw(userDraws, result1),
+      ),
+      formatPositionTimeMap(
+        positionTimeMap[result2],
+        getUserDrawNumberDraw(userDraws, result2),
+      ),
+      formatPositionTimeMap(
+        positionTimeMap[result3],
+        getUserDrawNumberDraw(userDraws, result3),
+      ),
     ];
 
     // sort by position
@@ -285,9 +295,19 @@ export const createGameFourDrawLayout = (
   return output;
 };
 
+export const getUserDrawNumberDraw = (
+  userDraws: UserDraw[],
+  currentHour: number,
+): number | null => {
+  return (
+    userDraws.filter((userDraw) => userDraw.drawTime === currentHour)[0]
+      ?.numberDraw ?? null
+  );
+};
+
 export const formatPositionTimeMap = (
   positionTimeMap: PositionTimeMap,
-  value: number | null,
+  value: number | null | undefined,
 ) => {
   const { time, position, timeMarker } = positionTimeMap;
 
@@ -298,4 +318,28 @@ export const formatPositionTimeMap = (
     value: value ?? null,
     position: position,
   };
+};
+
+export const getLocalTimeInHour = (timezone: string): number => {
+  return Number(moment(new Date()).tz(timezone).format('H'));
+};
+
+export const getNumberDraw = (
+  userDraws: UserDraw[],
+  randomRepeatAllowed: number,
+): number => {
+  const numberDraw = getRandomNumber(1, 24);
+
+  if (
+    userDraws.filter((userDraw) => userDraw.numberDraw === numberDraw).length >=
+    randomRepeatAllowed
+  ) {
+    return getNumberDraw(userDraws, randomRepeatAllowed);
+  }
+
+  return numberDraw;
+};
+
+export const getRandomNumber = (min: number, max: number) => {
+  return Math.floor(Math.random() * (max - min) + min);
 };

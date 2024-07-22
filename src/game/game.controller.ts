@@ -11,6 +11,7 @@ import { GameService } from './game.service';
 import { CreateGameDto } from './dto/create-game.dto';
 import { UpdateGameDto } from './dto/update-game.dto';
 import { CreateGameUserDto } from './dto/create-game-user.dto';
+import { UpdateGameUserDto } from './dto/update-game-user.dto';
 
 @Controller('games')
 export class GameController {
@@ -22,8 +23,13 @@ export class GameController {
   }
 
   @Post('player-number-pick')
-  playerNumberPick(@Body() createGameUserDto: CreateGameUserDto) {
+  createPlayerNumberPick(@Body() createGameUserDto: CreateGameUserDto) {
     return this.gameService.createPlayerNumberPick(createGameUserDto);
+  }
+
+  @Post('save-draw')
+  createPlayerDraw(@Body() updateGameUserDto: UpdateGameUserDto) {
+    return this.gameService.createPlayerDraw(updateGameUserDto);
   }
 
   @Get()
