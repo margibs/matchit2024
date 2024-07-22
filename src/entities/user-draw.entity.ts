@@ -34,15 +34,25 @@ export class UserDraw {
   @Column({ type: 'timestamp', nullable: true })
   drawAt: Date;
 
+  // register the hour of the draw
+  @Column()
+  drawTime: number;
+
   @CreateDateColumn()
   createdAt: Date;
 
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @ManyToOne(() => User, (user) => user.userDraws)
+  @ManyToOne(() => User, (user) => user.userDraws, {
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
   user: User;
 
-  @ManyToOne(() => Game, (game) => game.userDraws)
+  @ManyToOne(() => Game, (game) => game.userDraws, {
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
   game: Game;
 }

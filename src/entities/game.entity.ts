@@ -42,13 +42,13 @@ export class Game {
   @Column()
   duration: number;
 
-  @Column({ type: 'timestamp', nullable: true })
+  @Column({ type: 'timestamp', nullable: true, precision: 0 })
   startDate: Date;
 
-  @Column({ type: 'timestamp', nullable: true })
+  @Column({ type: 'timestamp', nullable: true, precision: 0 })
   endDate: Date;
 
-  @Column({ type: 'timestamp', nullable: true })
+  @Column({ type: 'timestamp', nullable: true, precision: 0 })
   pickingDate: Date;
 
   @Column({ type: 'enum', enum: ['random', 'sequential'] })

@@ -25,11 +25,17 @@ export class GameUser {
   @Column({ default: true })
   isPlayerNumberChosen: boolean;
 
-  @ManyToOne(() => User, (user) => user.gameUsers)
+  @ManyToOne(() => User, (user) => user.gameUsers, {
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
   @JoinColumn({ name: 'userId' })
   user: User;
 
-  @ManyToOne(() => Game, (game) => game.gameUsers)
+  @ManyToOne(() => Game, (game) => game.gameUsers, {
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
   @JoinColumn({ name: 'gameId' })
   game: Game;
 }
