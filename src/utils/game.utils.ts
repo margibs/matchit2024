@@ -23,7 +23,11 @@ export const createShuffledPositions = (): {
   return result;
 };
 
-type PositionTimeMap = { time: number; position: number; timeMarker: string };
+type PositionTimeMap = {
+  time: number;
+  position: number;
+  timeMarker: 'am' | 'pm';
+};
 
 // 0, 1, 2, 3
 // 4, 5, 6, 7
@@ -156,14 +160,14 @@ export const positionTimeMap: PositionTimeMap[] = [
 ];
 
 // Dynamic Position Time Map
-type PositionTimeMapType = {
-  time: number;
-  position: number;
-  timeMarker: 'am' | 'pm';
-};
 
-function generatePositionTimeMap(interval: number): PositionTimeMapType[] {
-  const positionTimeMap: PositionTimeMapType[] = [];
+// Interval 4
+// Not using this since we need caching to not always regenerate the position time map
+function generatePositionTimeMap(
+  interval: number,
+  currentHour: number,
+): PositionTimeMap {
+  const positionTimeMap: PositionTimeMap[] = [];
 
   for (let hour = 0; hour < 24; hour++) {
     const position = (hour % interval) + 1;
@@ -171,7 +175,7 @@ function generatePositionTimeMap(interval: number): PositionTimeMapType[] {
     positionTimeMap.push({ time: hour, position, timeMarker });
   }
 
-  return positionTimeMap;
+  return positionTimeMap[currentHour];
 }
 // END Dynamic Position Time Map
 
