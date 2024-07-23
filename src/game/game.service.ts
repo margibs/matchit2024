@@ -16,13 +16,12 @@ import {
   createGameFourDrawLayout,
   createShuffledPositions,
   formatPositionTimeMap,
-  getLocalTimeInHour,
+  getUserLocalTime,
   getNumberDraw,
   positionTimeMap,
 } from 'src/utils/game.utils';
 import { CreateGameUserDto } from './dto/create-game-user.dto';
 
-import * as moment from 'moment-timezone';
 import { UpdateGameUserDto } from './dto/update-game-user.dto';
 
 @Injectable()
@@ -121,7 +120,7 @@ export class GameService {
       .getMany();
 
     // TODO: Replace timezone with user timezone
-    const userLocalHour = getLocalTimeInHour('Asia/Manila');
+    const userLocalHour = getUserLocalTime('Asia/Manila', 'H');
     // const userLocalHour = getLocalTimeInHour('Europe/Berlin');
 
     const currentHour = +userLocalHour === 0 ? 24 : +userLocalHour;
@@ -139,21 +138,15 @@ export class GameService {
 
   async activeGames() {
     // TODO: Get Timezone from user
-    const now = moment(new Date());
-    const americaLa = now.tz('America/Los_Angeles').format();
-    const euroBerlin = now.tz('Europe/Berlin').format();
-    const philippines = now.tz('Asia/Manila').format();
-    console.debug('Different Timezones: ', {
-      americaLa,
-      euroBerlin,
-      philippines,
-    });
+    // const userLocalTime = getUserLocalTime('America/Los_Angeles');
+    // const userLocalTime = getUserLocalTime('Europe/Berlin');
+    const userLocalTime = getUserLocalTime('Asia/Manila');
 
     const queryBuilder = this.gameRepository
       .createQueryBuilder('game')
       .where('game.status = :status', { status: 'active' })
-      .andWhere('game.pickingDate <= :now', { now: euroBerlin })
-      .andWhere('game.endDate > :now', { now: euroBerlin })
+      .andWhere('game.pickingDate <= :now', { now: userLocalTime })
+      .andWhere('game.endDate > :now', { now: userLocalTime })
       .orderBy('game.id', 'DESC');
 
     // Log the query and parameters
@@ -211,15 +204,15 @@ export class GameService {
       where: { id: 1 },
     });
 
+    // Get User Current Local Hour
+    // TODO: Replace timezone with user timezone
+    const currentHour = getUserLocalTime('Asia/Manila', 'H');
+
     // Check game exist
     const game = await this.gameRepository.findOne({
       relations: ['boardOrders'],
       where: { id: updateGameUserDto.gameId },
     });
-
-    // Get User Current Local Hour
-    // TODO: Replace timezone with user timezone
-    const currentHour = getLocalTimeInHour('Asia/Manila');
 
     // Get all the userDraws for this tgame
     const userDraws = await this.userDrawRepository.find({

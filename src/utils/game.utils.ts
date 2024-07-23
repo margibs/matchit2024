@@ -155,6 +155,26 @@ export const positionTimeMap: PositionTimeMap[] = [
   },
 ];
 
+// Dynamic Position Time Map
+type PositionTimeMapType = {
+  time: number;
+  position: number;
+  timeMarker: 'am' | 'pm';
+};
+
+function generatePositionTimeMap(interval: number): PositionTimeMapType[] {
+  const positionTimeMap: PositionTimeMapType[] = [];
+
+  for (let hour = 0; hour < 24; hour++) {
+    const position = (hour % interval) + 1;
+    const timeMarker = hour < 12 ? 'am' : 'pm';
+    positionTimeMap.push({ time: hour, position, timeMarker });
+  }
+
+  return positionTimeMap;
+}
+// END Dynamic Position Time Map
+
 export const timeMapDaily = [
   8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 1, 2, 3, 4,
   5, 6, 7,
@@ -174,6 +194,11 @@ export const createGameFourDrawLayout = (
     26: 2,
     27: 3,
   };
+
+  console.debug({
+    timeIndex,
+    currentHour,
+  });
 
   let output;
 
@@ -269,8 +294,11 @@ export const createGameFourDrawLayout = (
     output = [
       {
         ...formatPositionTimeMap(
-          positionTimeMap[currentHour],
-          getUserDrawNumberDraw(userDraws, currentHour),
+          positionTimeMap[currentHour === 24 ? 0 : currentHour],
+          getUserDrawNumberDraw(
+            userDraws,
+            currentHour === 24 ? 0 : currentHour,
+          ),
         ),
         currentHour: true,
       },
@@ -320,8 +348,11 @@ export const formatPositionTimeMap = (
   };
 };
 
-export const getLocalTimeInHour = (timezone: string): number => {
-  return Number(moment(new Date()).tz(timezone).format('H'));
+export const getUserLocalTime = (
+  timezone: string,
+  format: string = '',
+): number => {
+  return Number(moment(new Date()).tz(timezone).format(format));
 };
 
 export const getNumberDraw = (
