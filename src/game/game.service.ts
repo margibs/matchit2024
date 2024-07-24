@@ -242,11 +242,6 @@ export class GameService {
       where: { gameId: game.id, userId: user.id },
     });
 
-    // Get playerNumbers
-    const gameUser = await this.gameUserRepository.findOne({
-      where: { gameId: game.id, userId: user.id },
-    });
-
     // Check if currentHour is not in userDraws
     if (!userDraws.find((userDraw) => userDraw.drawTime === +currentHour)) {
       const numberDraw = getNumberDraw(userDraws, game.randomRepeatAllowed);
@@ -257,6 +252,11 @@ export class GameService {
       ).position;
 
       // check if gameUser playerNumber has match
+      // Get playerNumbers
+      const gameUser = await this.gameUserRepository.findOne({
+        where: { gameId: game.id, userId: user.id },
+      });
+
       const isMatch = gameUser.playerNumbers.includes(+numberDraw);
 
       const userDraw = this.userDrawRepository.create({
