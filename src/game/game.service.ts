@@ -21,7 +21,6 @@ import {
   positionTimeMap,
 } from 'src/utils/game.utils';
 import { CreateGameUserDto } from './dto/create-game-user.dto';
-
 import { UpdateGameUserDto } from './dto/update-game-user.dto';
 
 @Injectable()

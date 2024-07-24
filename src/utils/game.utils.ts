@@ -352,11 +352,8 @@ export const formatPositionTimeMap = (
   };
 };
 
-export const getUserLocalTime = (
-  timezone: string,
-  format: string = '',
-): number => {
-  return Number(moment(new Date()).tz(timezone).format(format));
+export const getUserLocalTime = (timezone: string, format: string = '') => {
+  return moment(new Date()).tz(timezone).format(format);
 };
 
 export const getNumberDraw = (
