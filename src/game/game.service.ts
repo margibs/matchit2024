@@ -11,7 +11,7 @@ import {
   User,
   UserDraw,
 } from 'src/entities';
-import { DataSource, Repository } from 'typeorm';
+import { DataSource, LessThan, MoreThan, Repository } from 'typeorm';
 import {
   createGameFourDrawLayout,
   createShuffledPositions,
@@ -104,10 +104,27 @@ export class GameService {
       where: { id: 1 },
     });
 
+    // const game = await this.gameRepository.findOne({
+    //   relations: ['boardOrders'],
+    //   where: { id },
+    // });
+
+    // TODO: Replace timezone with user timezone
+    const userLocalTime = getUserLocalTime('Asia/Manila');
+
+    // TODO: Double check logic
     const game = await this.gameRepository.findOne({
       relations: ['boardOrders'],
-      where: { id },
+      where: {
+        pickingDate: LessThan(new Date(userLocalTime)),
+        endDate: MoreThan(new Date(userLocalTime)),
+        id,
+      },
     });
+
+    if (!game) {
+      return 'Game not found';
+    }
 
     // get user draws check if user draws exist
     const userDraws = await this.userDrawRepository
@@ -206,12 +223,21 @@ export class GameService {
     // Get User Current Local Hour
     // TODO: Replace timezone with user timezone
     const currentHour = getUserLocalTime('Asia/Manila', 'H');
+    const userLocalTime = getUserLocalTime('Asia/Manila');
 
     // Check game exist
     const game = await this.gameRepository.findOne({
       relations: ['boardOrders'],
-      where: { id: updateGameUserDto.gameId },
+      where: {
+        pickingDate: LessThan(new Date(userLocalTime)),
+        endDate: MoreThan(new Date(userLocalTime)),
+        id: updateGameUserDto.gameId,
+      },
     });
+
+    if (!game) {
+      return 'Game not found';
+    }
 
     // Get all the userDraws for this tgame
     const userDraws = await this.userDrawRepository.find({
