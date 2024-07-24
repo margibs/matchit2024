@@ -7,6 +7,7 @@ import { ConfigModule } from '@nestjs/config';
 import { UserModule } from './user/user.module';
 import { GameModule } from './game/game.module';
 import { BoardModule } from './board/board.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { BoardModule } from './board/board.module';
     UserModule,
     GameModule,
     BoardModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

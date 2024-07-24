@@ -104,15 +104,10 @@ export class GameService {
       where: { id: 1 },
     });
 
-    // const game = await this.gameRepository.findOne({
-    //   relations: ['boardOrders'],
-    //   where: { id },
-    // });
-
     // TODO: Replace timezone with user timezone
     const userLocalTime = getUserLocalTime('Asia/Manila');
 
-    // TODO: Double check logic
+    // TODO: Create a function for this
     const game = await this.gameRepository.findOne({
       relations: ['boardOrders'],
       where: {
@@ -125,6 +120,7 @@ export class GameService {
     if (!game) {
       return 'Game not found';
     }
+    // TODO: END Create a function for this
 
     // get user draws check if user draws exist
     const userDraws = await this.userDrawRepository
@@ -222,6 +218,7 @@ export class GameService {
 
     // Get User Current Local Hour
     // TODO: Replace timezone with user timezone
+    // TODO: Create a function for this
     const currentHour = getUserLocalTime('Asia/Manila', 'H');
     const userLocalTime = getUserLocalTime('Asia/Manila');
 
@@ -238,6 +235,7 @@ export class GameService {
     if (!game) {
       return 'Game not found';
     }
+    // TODO: END Create a function for this
 
     // Get all the userDraws for this tgame
     const userDraws = await this.userDrawRepository.find({
