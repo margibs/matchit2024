@@ -44,6 +44,12 @@ export class User {
   })
   role: UserRole;
 
+  @Column({ nullable: true })
+  rrs_id: string;
+
+  @Column({ nullable: true })
+  rrs_token: string;
+
   @OneToMany(() => Game, (game) => game.createdBy)
   games: Game[];
 
