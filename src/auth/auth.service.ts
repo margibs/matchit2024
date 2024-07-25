@@ -14,7 +14,7 @@ export class AuthService {
     rss_id: string,
     rss_token: string,
   ): Promise<any> {
-    const user = await this.userService.findOneByEmail(email);
+    const user = await this.userService.findUserByEmail(email);
 
     // Compare rss_id and rss_token
     if (user && user.rrs_id === rss_id && user.rrs_token === rss_token) {

@@ -98,12 +98,7 @@ export class GameService {
     });
   }
 
-  async getUserGame(id: number) {
-    // TODO: Replace user with current user after JWT + login implementation
-    const user = await this.userRepository.findOne({
-      where: { id: 1 },
-    });
-
+  async getUserGame(id: number, user: User) {
     // TODO: Replace timezone with user timezone
     const userLocalTime = getUserLocalTime('Asia/Manila');
 
@@ -148,7 +143,7 @@ export class GameService {
     return await this.gameRepository.delete(id);
   }
 
-  async activeGames() {
+  async activeGames(user: User) {
     // TODO: Get Timezone from user
     // const userLocalTime = getUserLocalTime('America/Los_Angeles');
     // const userLocalTime = getUserLocalTime('Europe/Berlin');
@@ -172,12 +167,10 @@ export class GameService {
     return games;
   }
 
-  async createPlayerNumberPick(createGameUserDto: CreateGameUserDto) {
-    // TODO: Replace user with current user after JWT + login implementation
-    const user = await this.userRepository.findOne({
-      where: { id: 1 },
-    });
-
+  async createPlayerNumberPick(
+    createGameUserDto: CreateGameUserDto,
+    user: User,
+  ) {
     // Check if game exists
     const game = await this.gameRepository.findOne({
       where: { id: createGameUserDto.gameId },
@@ -210,12 +203,7 @@ export class GameService {
     return gameUser;
   }
 
-  async createPlayerDraw(updateGameUserDto: UpdateGameUserDto) {
-    // TODO: Replace user with current user after JWT + login implementation
-    const user = await this.userRepository.findOne({
-      where: { id: 1 },
-    });
-
+  async createPlayerDraw(updateGameUserDto: UpdateGameUserDto, user: User) {
     // Get User Current Local Hour
     // TODO: Replace timezone with user timezone
     // TODO: Create a function for this
@@ -246,7 +234,7 @@ export class GameService {
       return 'Pick player numbers first';
     }
 
-    // Get all the userDraws for this tgame
+    // Get all the userDraws for this game
     const userDraws = await this.userDrawRepository.find({
       where: { gameId: game.id, userId: user.id },
     });

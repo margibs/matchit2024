@@ -7,9 +7,10 @@ import { UserModule } from 'src/user/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from 'src/entities';
 import { RrsStrategy } from './strategies/rrs.strategy';
+import { JwtStrategy } from './strategies/jwt.strategy';
 
 @Module({
-  providers: [AuthService, RrsStrategy],
+  providers: [AuthService, RrsStrategy, JwtStrategy],
   controllers: [AuthController],
   imports: [
     ConfigModule,
