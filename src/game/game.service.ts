@@ -237,6 +237,15 @@ export class GameService {
     }
     // TODO: END Create a function for this
 
+    // Get playerNumbers
+    const gameUser = await this.gameUserRepository.findOne({
+      where: { gameId: game.id, userId: user.id },
+    });
+
+    if (!gameUser) {
+      return 'Pick player numbers first';
+    }
+
     // Get all the userDraws for this tgame
     const userDraws = await this.userDrawRepository.find({
       where: { gameId: game.id, userId: user.id },
@@ -252,10 +261,6 @@ export class GameService {
       ).position;
 
       // check if gameUser playerNumber has match
-      // Get playerNumbers
-      const gameUser = await this.gameUserRepository.findOne({
-        where: { gameId: game.id, userId: user.id },
-      });
 
       const isMatch = gameUser.playerNumbers.includes(+numberDraw);
 

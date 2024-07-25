@@ -9,7 +9,6 @@ export class AuthController {
   @UseGuards(RrsAuthGuard)
   @Post('login')
   async login(@Request() req) {
-    // return 'yeah boi';
     return await this.authService.login(req.user);
   }
 
