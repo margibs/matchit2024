@@ -99,6 +99,8 @@ export class GameService {
   }
 
   async getUserGame(id: number, user: User) {
+    console.debug({ user });
+
     // TODO: Replace timezone with user timezone
     const userLocalTime = getUserLocalTime('Asia/Manila');
 
@@ -116,6 +118,15 @@ export class GameService {
       return 'Game not found';
     }
     // TODO: END Create a function for this
+
+    // Check if user has playerNumberPick
+    const gameUser = await this.gameUserRepository.findOne({
+      where: { userId: user.id, gameId: game.id },
+    });
+
+    if (!gameUser) {
+      return 'Pick player numbers first';
+    }
 
     // get user draws check if user draws exist
     const userDraws = await this.userDrawRepository
@@ -144,6 +155,7 @@ export class GameService {
   }
 
   async activeGames(user: User) {
+    console.debug({ user });
     // TODO: Get Timezone from user
     // const userLocalTime = getUserLocalTime('America/Los_Angeles');
     // const userLocalTime = getUserLocalTime('Europe/Berlin');
@@ -204,6 +216,7 @@ export class GameService {
   }
 
   async createPlayerDraw(updateGameUserDto: UpdateGameUserDto, user: User) {
+    console.debug({ user });
     // Get User Current Local Hour
     // TODO: Replace timezone with user timezone
     // TODO: Create a function for this
