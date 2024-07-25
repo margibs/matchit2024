@@ -39,4 +39,9 @@ export class UserController {
   remove(@Param('id') id: string) {
     return this.userService.remove(+id);
   }
+
+  @Get('seeder/timezones')
+  bulkInsertTimezones() {
+    return this.userService.bulkInsertTimezones();
+  }
 }

@@ -16,6 +16,9 @@ export class Timezone {
   @Column()
   name: string;
 
+  @Column()
+  offset: string;
+
   @OneToMany(() => User, (user) => user.timezone)
   users: User[];
 

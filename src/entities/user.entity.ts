@@ -34,7 +34,10 @@ export class User {
   @Column({ length: 255 })
   password: string;
 
-  @ManyToOne(() => Timezone, (timezone) => timezone.users, { nullable: true })
+  @ManyToOne(() => Timezone, (timezone) => timezone.users, {
+    nullable: true,
+    onDelete: 'SET NULL',
+  })
   timezone: Timezone;
 
   @Column({

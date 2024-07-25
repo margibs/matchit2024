@@ -100,9 +100,9 @@ export class GameService {
 
   async getUserGame(id: number, user: User) {
     console.debug({ user });
+    const { name: timezoneName } = user.timezone;
 
-    // TODO: Replace timezone with user timezone
-    const userLocalTime = getUserLocalTime('Asia/Manila');
+    const userLocalTime = getUserLocalTime(timezoneName);
 
     // TODO: Create a function for this
     const game = await this.gameRepository.findOne({
@@ -137,10 +137,7 @@ export class GameService {
       .limit(4)
       .getMany();
 
-    // TODO: Replace timezone with user timezone
-    const userLocalHour = getUserLocalTime('Asia/Manila', 'H');
-    // const userLocalHour = getLocalTimeInHour('Europe/Berlin');
-
+    const userLocalHour = getUserLocalTime(timezoneName, 'H');
     const currentHour = +userLocalHour === 0 ? 24 : +userLocalHour;
 
     return createGameFourDrawLayout(currentHour, userDraws);
@@ -156,10 +153,8 @@ export class GameService {
 
   async activeGames(user: User) {
     console.debug({ user });
-    // TODO: Get Timezone from user
-    // const userLocalTime = getUserLocalTime('America/Los_Angeles');
-    // const userLocalTime = getUserLocalTime('Europe/Berlin');
-    const userLocalTime = getUserLocalTime('Asia/Manila');
+    const { name: timezoneName } = user.timezone;
+    const userLocalTime = getUserLocalTime(timezoneName);
 
     const queryBuilder = this.gameRepository
       .createQueryBuilder('game')
@@ -217,11 +212,11 @@ export class GameService {
 
   async createPlayerDraw(updateGameUserDto: UpdateGameUserDto, user: User) {
     console.debug({ user });
+    const { name: timezoneName } = user.timezone;
     // Get User Current Local Hour
-    // TODO: Replace timezone with user timezone
     // TODO: Create a function for this
-    const currentHour = getUserLocalTime('Asia/Manila', 'H');
-    const userLocalTime = getUserLocalTime('Asia/Manila');
+    const currentHour = getUserLocalTime(timezoneName, 'H');
+    const userLocalTime = getUserLocalTime(timezoneName);
 
     // Check game exist
     const game = await this.gameRepository.findOne({
