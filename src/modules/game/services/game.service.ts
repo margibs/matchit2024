@@ -10,13 +10,13 @@ import {
   formatPositionTimeMap,
   getUserLocalTime,
   getNumberDraw,
-  positionTimeMap,
 } from 'src/common/utils/game.utils';
 import { CreateGameUserDto } from '../dtos/create-game-user.dto';
 import { UpdateGameUserDto } from '../dtos/update-game-user.dto';
 import { User } from 'src/modules/user/entities/user.entity';
 import { Board } from 'src/modules/board/entities/board.entity';
 import { Game, Status } from '../entities/game.entity';
+import { positionTimeMap } from 'src/common/constants/constants';
 
 @Injectable()
 export class GameService {
