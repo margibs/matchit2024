@@ -26,15 +26,3 @@ export const config: DataSourceOptions = {
 
 const dataSource = new DataSource(config);
 export default dataSource;
-
-// host: process.env.POSTGRES_HOST,
-// port: 5432,
-// username: process.env.POSTGRES_USER,
-// password: process.env.POSTGRES_PASSWORD,
-// database: process.env.POSTGRES_DATABASE,
-
-// host: process.env.POSTGRES_HOST_MANUAL,
-// port: 5432,
-// username: process.env.POSTGRES_USER_MANUAL,
-// password: process.env.POSTGRES_PASSWORD_MANUAL,
-// database: process.env.POSTGRES_DATABASE_MANUAL,

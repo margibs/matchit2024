@@ -13,7 +13,6 @@ import { config } from './config/typeorm.config';
 
 @Module({
   imports: [
-    // TypeOrmModule.forRootAsync(config),
     TypeOrmModule.forRoot(config),
     ConfigModule.forRoot({ isGlobal: true }),
     UserModule,
