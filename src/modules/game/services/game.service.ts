@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { CreateGameDto } from './dto/create-game.dto';
-import { UpdateGameDto } from './dto/update-game.dto';
+import { CreateGameDto } from '../dtos/create-game.dto';
+import { UpdateGameDto } from '../dtos/update-game.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { BoardOrder, Game, GameUser, Status, UserDraw } from 'src/entities';
+import { BoardOrder, GameUser, UserDraw } from 'src/entities';
 import { DataSource, LessThan, MoreThan, Repository } from 'typeorm';
 import {
   createGameFourDrawLayout,
@@ -12,10 +12,11 @@ import {
   getNumberDraw,
   positionTimeMap,
 } from 'src/common/utils/game.utils';
-import { CreateGameUserDto } from './dto/create-game-user.dto';
-import { UpdateGameUserDto } from './dto/update-game-user.dto';
+import { CreateGameUserDto } from '../dtos/create-game-user.dto';
+import { UpdateGameUserDto } from '../dtos/update-game-user.dto';
 import { User } from 'src/modules/user/entities/user.entity';
 import { Board } from 'src/modules/board/entities/board.entity';
+import { Game, Status } from '../entities/game.entity';
 
 @Injectable()
 export class GameService {

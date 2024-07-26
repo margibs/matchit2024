@@ -1,6 +1,7 @@
 import { ConfigService } from '@nestjs/config';
-import { Game, GameUser, UserDraw, BoardOrder, Timezone } from 'src/entities';
+import { GameUser, UserDraw, BoardOrder, Timezone } from 'src/entities';
 import { Board } from 'src/modules/board/entities/board.entity';
+import { Game } from 'src/modules/game/entities/game.entity';
 import { User } from 'src/modules/user/entities/user.entity';
 import { SeederOptions } from 'typeorm-extension';
 

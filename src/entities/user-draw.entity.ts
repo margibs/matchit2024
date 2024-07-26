@@ -6,8 +6,8 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Game } from '.';
 import { User } from 'src/modules/user/entities/user.entity';
+import { Game } from 'src/modules/game/entities/game.entity';
 
 @Entity()
 export class UserDraw {

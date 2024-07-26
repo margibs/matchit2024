@@ -1,3 +1,4 @@
+import { Game } from 'src/modules/game/entities/game.entity';
 import {
   Column,
   CreateDateColumn,
@@ -7,7 +8,6 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Game } from '.';
 
 @Entity()
 export class BoardOrder {

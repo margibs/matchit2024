@@ -8,7 +8,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { BoardOrder, GameUser, UserDraw } from '.';
+import { BoardOrder, GameUser, UserDraw } from '../../../entities';
 import { User } from 'src/modules/user/entities/user.entity';
 import { Board } from 'src/modules/board/entities/board.entity';
 

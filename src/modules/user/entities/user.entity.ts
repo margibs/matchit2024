@@ -9,7 +9,8 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
-import { Game, GameUser, Timezone, UserDraw } from 'src/entities';
+import { GameUser, Timezone, UserDraw } from 'src/entities';
+import { Game } from 'src/modules/game/entities/game.entity';
 
 export enum UserRole {
   ADMIN = 'admin',

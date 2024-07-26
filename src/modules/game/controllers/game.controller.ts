@@ -1,21 +1,23 @@
 import {
+  Body,
   Controller,
+  Delete,
   Get,
   Post,
-  Body,
   Patch,
   Param,
-  Delete,
   UseGuards,
 } from '@nestjs/common';
-import { GameService } from './game.service';
-import { CreateGameDto } from './dto/create-game.dto';
-import { UpdateGameDto } from './dto/update-game.dto';
-import { CreateGameUserDto } from './dto/create-game-user.dto';
-import { UpdateGameUserDto } from './dto/update-game-user.dto';
-import { JwtAuthGuard } from 'src/auth/guards/jwt.auth.guard';
 import { CurrentUser } from 'src/decorator/current-user.decorator';
+
+import { JwtAuthGuard } from 'src/auth/guards/jwt.auth.guard';
+
 import { User } from 'src/modules/user/entities/user.entity';
+import { GameService } from '../services/game.service';
+import { CreateGameDto } from '../dtos/create-game.dto';
+import { CreateGameUserDto } from '../dtos/create-game-user.dto';
+import { UpdateGameUserDto } from '../dtos/update-game-user.dto';
+import { UpdateGameDto } from '../dtos/update-game.dto';
 
 @UseGuards(JwtAuthGuard)
 @Controller('games')
