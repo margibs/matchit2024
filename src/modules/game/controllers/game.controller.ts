@@ -8,7 +8,7 @@ import {
   Param,
   UseGuards,
 } from '@nestjs/common';
-import { CurrentUser } from 'src/decorator/current-user.decorator';
+import { CurrentUser } from 'src/common/decorator/current-user.decorator';
 
 import { JwtAuthGuard } from 'src/modules/auth/guards/jwt.auth.guard';
 

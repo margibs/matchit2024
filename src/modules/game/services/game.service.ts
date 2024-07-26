@@ -2,7 +2,6 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateGameDto } from '../dtos/create-game.dto';
 import { UpdateGameDto } from '../dtos/update-game.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { BoardOrder, GameUser, UserDraw } from 'src/entities';
 import { DataSource, LessThan, MoreThan, Repository } from 'typeorm';
 import {
   createGameFourDrawLayout,
@@ -13,10 +12,14 @@ import {
 } from 'src/common/utils/game.utils';
 import { CreateGameUserDto } from '../dtos/create-game-user.dto';
 import { UpdateGameUserDto } from '../dtos/update-game-user.dto';
-import { User } from 'src/modules/user/entities/user.entity';
-import { Board } from 'src/modules/board/entities/board.entity';
-import { Game, Status } from '../entities/game.entity';
 import { positionTimeMap } from 'src/common/constants/constants';
+
+import { Board } from 'src/modules/board/entities/board.entity';
+import { BoardOrder } from '../entities/board-order.entity';
+import { Game, Status } from '../entities/game.entity';
+import { GameUser } from '../entities/game-user.entity';
+import { User } from 'src/modules/user/entities/user.entity';
+import { UserDraw } from '../entities/user-draw.entity';
 
 @Injectable()
 export class GameService {

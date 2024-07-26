@@ -1,5 +1,5 @@
 import * as moment from 'moment-timezone';
-import { UserDraw } from 'src/entities';
+import { UserDraw } from 'src/modules/game/entities/user-draw.entity';
 import { positionTimeMap, timeMapDaily } from '../constants/constants';
 import { PositionTimeMap } from '../types/game.types';
 

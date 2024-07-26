@@ -1,9 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Timezone } from 'src/entities';
 import { DataSource, Repository } from 'typeorm';
+
 import { CreateUserDto } from '../dtos/create-user.dto';
 import { UpdateUserDto } from '../dtos/update-user.dto';
+
+import { Timezone } from '../entities/timezone.entity';
 import { User } from '../entities/user.entity';
 
 @Injectable()

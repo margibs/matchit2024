@@ -8,9 +8,12 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { BoardOrder, GameUser, UserDraw } from '../../../entities';
-import { User } from 'src/modules/user/entities/user.entity';
+
 import { Board } from 'src/modules/board/entities/board.entity';
+import { BoardOrder } from './board-order.entity';
+import { UserDraw } from './user-draw.entity';
+import { User } from 'src/modules/user/entities/user.entity';
+import { GameUser } from './game-user.entity';
 
 export enum Status {
   ACTIVE = 'active',

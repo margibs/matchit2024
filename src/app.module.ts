@@ -9,11 +9,11 @@ import { AuthModule } from './modules/auth/auth.module';
 import { UserModule } from './modules/user/user.module';
 import { GameModule } from './modules/game/game.module';
 import { BoardModule } from './modules/board/board.module';
-import { config } from './config/typeorm.config';
+import config from './config/typeorm.config';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot(config),
+    TypeOrmModule.forRootAsync(config),
     ConfigModule.forRoot({ isGlobal: true }),
     UserModule,
     GameModule,
