@@ -6,7 +6,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Game } from '.';
+import { Game } from 'src/entities';
 
 @Entity()
 export class Board {

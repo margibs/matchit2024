@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Board } from 'src/entities';
 import { Repository } from 'typeorm';
 
 import { CreateBoardDto } from '../dtos/create-board.dto';
 import { UpdateBoardDto } from '../dtos/update-board.dto';
+
+import { Board } from '../entities/board.entity';
 
 @Injectable()
 export class BoardService {
