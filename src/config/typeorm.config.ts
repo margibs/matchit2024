@@ -1,34 +1,40 @@
-import { ConfigService } from '@nestjs/config';
-import { GameUser, UserDraw, BoardOrder, Timezone } from 'src/entities';
-import { Board } from 'src/modules/board/entities/board.entity';
-import { Game } from 'src/modules/game/entities/game.entity';
-import { User } from 'src/modules/user/entities/user.entity';
-import { SeederOptions } from 'typeorm-extension';
+import { DataSource, DataSourceOptions } from 'typeorm';
 
-import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
+import * as dotenv from 'dotenv';
+dotenv.config();
 
-const config = {
-  useFactory: (
-    configService: ConfigService,
-  ): PostgresConnectionOptions & SeederOptions => {
-    return {
-      type: 'postgres',
-      host: configService.get('POSTGRES_HOST'),
-      port: 5432,
-      username: configService.get('POSTGRES_USER'),
-      password: configService.get('POSTGRES_PASSWORD'),
-      database: configService.get('POSTGRES_DATABASE'),
-      entities: [Board, BoardOrder, Game, GameUser, Timezone, User, UserDraw],
-      synchronize: true,
-      ssl: true,
-      extra: {
-        ssl: {
-          rejectUnauthorized: false,
-        },
-      },
-    };
+// TODO: find a way to use configService
+export const config: DataSourceOptions = {
+  type: 'postgres',
+  host: process.env.POSTGRES_HOST,
+  port: 5432,
+  username: process.env.POSTGRES_USER,
+  password: process.env.POSTGRES_PASSWORD,
+  database: process.env.POSTGRES_DATABASE,
+  entities: ['dist/**/*.entity{.ts,.js}'],
+  migrations: ['dist/db/migrations/*{.ts,.js}'],
+  migrationsTableName: 'typeorm_migrations',
+  migrationsRun: false,
+  synchronize: false,
+  ssl: true,
+  extra: {
+    ssl: {
+      rejectUnauthorized: false,
+    },
   },
-  inject: [ConfigService],
 };
 
-export default config;
+const dataSource = new DataSource(config);
+export default dataSource;
+
+// host: process.env.POSTGRES_HOST,
+// port: 5432,
+// username: process.env.POSTGRES_USER,
+// password: process.env.POSTGRES_PASSWORD,
+// database: process.env.POSTGRES_DATABASE,
+
+// host: process.env.POSTGRES_HOST_MANUAL,
+// port: 5432,
+// username: process.env.POSTGRES_USER_MANUAL,
+// password: process.env.POSTGRES_PASSWORD_MANUAL,
+// database: process.env.POSTGRES_DATABASE_MANUAL,
