@@ -2,6 +2,7 @@ import { Timezone } from 'src/modules/user/entities/timezone.entity';
 import { DataSource } from 'typeorm';
 import { Seeder } from 'typeorm-extension';
 
+//TODO: Figure out how to re-seed without deleting the users
 export default class TimezoneSeeder implements Seeder {
   public async run(dataSource: DataSource): Promise<any> {
     const timezones = [
