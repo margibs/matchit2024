@@ -1,7 +1,7 @@
 import { Controller, Post, Request, UseGuards } from '@nestjs/common';
-import { AuthService } from './auth.service';
-import { RrsAuthGuard } from './guards/rrs.auth.guard';
-import { JwtRefreshAuthGuard } from './guards/jwt-refresh.auth.guard';
+import { AuthService } from '../services/auth.service';
+import { RrsAuthGuard } from '../guards/rrs.auth.guard';
+import { JwtRefreshAuthGuard } from '../guards/jwt-refresh.auth.guard';
 
 @Controller('auth')
 export class AuthController {

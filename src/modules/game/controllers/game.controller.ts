@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { CurrentUser } from 'src/decorator/current-user.decorator';
 
-import { JwtAuthGuard } from 'src/auth/guards/jwt.auth.guard';
+import { JwtAuthGuard } from 'src/modules/auth/guards/jwt.auth.guard';
 
 import { User } from 'src/modules/user/entities/user.entity';
 import { GameService } from '../services/game.service';
