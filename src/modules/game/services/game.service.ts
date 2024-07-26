@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateGameDto } from '../dtos/create-game.dto';
 import { UpdateGameDto } from '../dtos/update-game.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -31,7 +31,7 @@ export class GameService {
     private readonly userDrawRepository: Repository<UserDraw>,
     private readonly dataSource: DataSource,
   ) {}
-  async create(createGameDto: CreateGameDto) {
+  async create(createGameDto: CreateGameDto, user: User) {
     const queryRunner = this.dataSource.createQueryRunner();
 
     await queryRunner.connect();
@@ -39,14 +39,14 @@ export class GameService {
 
     try {
       // Fetch related entities within the transaction
-      // TODO: Replace user with current user after JWT + login implementation
-      const [user, board] = await Promise.all([
-        queryRunner.manager.findOne(User, { where: { id: 1 } }),
-        queryRunner.manager.findOne(Board, { where: { id: 1 } }),
+      const [board] = await Promise.all([
+        queryRunner.manager.findOne(Board, {
+          where: { id: createGameDto.boardId },
+        }),
       ]);
 
-      if (!user || !board) {
-        throw new Error('User or Board not found');
+      if (!board) {
+        throw new NotFoundException('Board not found');
       }
 
       // Create and save the game
@@ -99,20 +99,7 @@ export class GameService {
 
     const userLocalTime = getUserLocalTime(timezoneName);
 
-    // TODO: Create a function for this
-    const game = await this.gameRepository.findOne({
-      relations: ['boardOrders'],
-      where: {
-        pickingDate: LessThan(new Date(userLocalTime)),
-        endDate: MoreThan(new Date(userLocalTime)),
-        id,
-      },
-    });
-
-    if (!game) {
-      return 'Game not found';
-    }
-    // TODO: END Create a function for this
+    const game = await this.getGameWithDateAndId(userLocalTime, id);
 
     // Check if user has playerNumberPick
     const gameUser = await this.gameUserRepository.findOne({
@@ -138,10 +125,12 @@ export class GameService {
     return createGameFourDrawLayout(currentHour, userDraws);
   }
 
+  // TODO: Test this function
   async update(id: number, updateGameDto: UpdateGameDto) {
     return this.gameRepository.update(id, updateGameDto);
   }
 
+  // TODO: Test this function
   async remove(id: number) {
     return await this.gameRepository.delete(id);
   }
@@ -178,21 +167,17 @@ export class GameService {
       where: { id: createGameUserDto.gameId },
     });
 
-    // TODO: Replace throw with proper error
     if (!game) {
-      throw new Error('Game not found');
+      throw new NotFoundException('Game not found');
     }
 
-    // Check if game is active
-    // TODO: Replace throw with proper error
     if (game.status !== Status.ACTIVE) {
-      throw new Error('Game is not active');
+      throw new NotFoundException('Game is not active');
     }
 
     // Check playerNumbers length is equal to game.numberPicking
-    // TODO: Replace throw with proper error
     if (createGameUserDto.playerNumbers.length !== game.numberPicking) {
-      throw new Error('Invalid playerNumbers length');
+      throw new NotFoundException('Invalid playerNumbers length');
     }
 
     const gameUser = this.gameUserRepository.create({
@@ -208,25 +193,15 @@ export class GameService {
   async createPlayerDraw(updateGameUserDto: UpdateGameUserDto, user: User) {
     console.debug({ user });
     const { name: timezoneName } = user.timezone;
+
     // Get User Current Local Hour
-    // TODO: Create a function for this
     const currentHour = getUserLocalTime(timezoneName, 'H');
     const userLocalTime = getUserLocalTime(timezoneName);
 
-    // Check game exist
-    const game = await this.gameRepository.findOne({
-      relations: ['boardOrders'],
-      where: {
-        pickingDate: LessThan(new Date(userLocalTime)),
-        endDate: MoreThan(new Date(userLocalTime)),
-        id: updateGameUserDto.gameId,
-      },
-    });
-
-    if (!game) {
-      return 'Game not found';
-    }
-    // TODO: END Create a function for this
+    const game = await this.getGameWithDateAndId(
+      userLocalTime,
+      updateGameUserDto.gameId,
+    );
 
     // Get playerNumbers
     const gameUser = await this.gameUserRepository.findOne({
@@ -280,5 +255,24 @@ export class GameService {
     }
 
     return { message: 'Already drawn' };
+  }
+
+  async getGameWithDateAndId(userLocalTime: string, id: number) {
+    // Check game exist
+    const game = await this.gameRepository.findOne({
+      relations: ['boardOrders'],
+      where: {
+        id,
+        pickingDate: LessThan(new Date(userLocalTime)),
+        endDate: MoreThan(new Date(userLocalTime)),
+        status: Status.ACTIVE,
+      },
+    });
+
+    if (!game) {
+      throw new NotFoundException('Game not found');
+    }
+
+    return game;
   }
 }

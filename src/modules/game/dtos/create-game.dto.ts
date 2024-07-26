@@ -28,6 +28,10 @@ export class CreateGameDto {
   @IsNotEmpty()
   startDate: Date;
 
+  @IsNumber()
+  @IsNotEmpty()
+  boardId: number;
+
   @IsDateString()
   @IsNotEmpty()
   endDate: Date;

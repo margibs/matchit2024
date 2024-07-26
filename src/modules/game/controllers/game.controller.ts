@@ -25,8 +25,8 @@ export class GameController {
   constructor(private readonly gameService: GameService) {}
 
   @Post()
-  create(@Body() createGameDto: CreateGameDto) {
-    return this.gameService.create(createGameDto);
+  create(@Body() createGameDto: CreateGameDto, @CurrentUser() user: User) {
+    return this.gameService.create(createGameDto, user);
   }
 
   @Post('player-number-pick')
