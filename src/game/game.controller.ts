@@ -15,7 +15,7 @@ import { CreateGameUserDto } from './dto/create-game-user.dto';
 import { UpdateGameUserDto } from './dto/update-game-user.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt.auth.guard';
 import { CurrentUser } from 'src/decorator/current-user.decorator';
-import { User } from 'src/entities';
+import { User } from 'src/modules/user/entities/user.entity';
 
 @UseGuards(JwtAuthGuard)
 @Controller('games')

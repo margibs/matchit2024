@@ -8,7 +8,6 @@ import {
   Game,
   GameUser,
   Status,
-  User,
   UserDraw,
 } from 'src/entities';
 import { DataSource, LessThan, MoreThan, Repository } from 'typeorm';
@@ -19,9 +18,10 @@ import {
   getUserLocalTime,
   getNumberDraw,
   positionTimeMap,
-} from 'src/utils/game.utils';
+} from 'src/common/utils/game.utils';
 import { CreateGameUserDto } from './dto/create-game-user.dto';
 import { UpdateGameUserDto } from './dto/update-game-user.dto';
+import { User } from 'src/modules/user/entities/user.entity';
 
 @Injectable()
 export class GameService {

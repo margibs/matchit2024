@@ -3,12 +3,13 @@ import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
-import { UserModule } from 'src/user/user.module';
+import { UserModule } from 'src/modules/user/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from 'src/entities';
+
 import { RrsStrategy } from './strategies/rrs.strategy';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { JwtRefreshStrategy } from './strategies/jwt-refresh.strategy';
+import { User } from 'src/modules/user/entities/user.entity';
 
 @Module({
   providers: [AuthService, JwtStrategy, JwtRefreshStrategy, RrsStrategy],

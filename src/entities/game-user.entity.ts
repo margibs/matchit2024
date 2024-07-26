@@ -6,7 +6,8 @@ import {
   ManyToOne,
   PrimaryColumn,
 } from 'typeorm';
-import { Game, User } from '.';
+import { Game } from '.';
+import { User } from 'src/modules/user/entities/user.entity';
 
 @Entity()
 @Index('IDX_USER_GAME', ['user', 'game']) // Composite index for user and game

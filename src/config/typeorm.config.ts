@@ -1,6 +1,5 @@
 import { ConfigService } from '@nestjs/config';
 import {
-  User,
   Game,
   GameUser,
   UserDraw,
@@ -8,6 +7,7 @@ import {
   BoardOrder,
   Timezone,
 } from 'src/entities';
+import { User } from 'src/modules/user/entities/user.entity';
 import { SeederOptions } from 'typeorm-extension';
 
 import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
