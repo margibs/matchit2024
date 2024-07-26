@@ -6,7 +6,7 @@ import config from 'src/config/typeorm.config';
 import { ConfigModule } from '@nestjs/config';
 import { UserModule } from './modules/user/user.module';
 import { GameModule } from './game/game.module';
-import { BoardModule } from './board/board.module';
+import { BoardModule } from './modules/board/board.module';
 import { AuthModule } from './auth/auth.module';
 
 @Module({

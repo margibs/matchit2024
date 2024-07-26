@@ -7,9 +7,11 @@ import {
   Param,
   Delete,
 } from '@nestjs/common';
-import { BoardService } from './board.service';
-import { CreateBoardDto } from './dto/create-board.dto';
-import { UpdateBoardDto } from './dto/update-board.dto';
+
+import { BoardService } from '../services/board.service';
+
+import { CreateBoardDto } from '../dtos/create-board.dto';
+import { UpdateBoardDto } from '../dtos/update-board.dto';
 
 @Controller('boards')
 export class BoardController {

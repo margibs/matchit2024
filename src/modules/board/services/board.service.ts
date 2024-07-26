@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { CreateBoardDto } from './dto/create-board.dto';
-import { UpdateBoardDto } from './dto/update-board.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Board } from 'src/entities';
 import { Repository } from 'typeorm';
+
+import { CreateBoardDto } from '../dtos/create-board.dto';
+import { UpdateBoardDto } from '../dtos/update-board.dto';
 
 @Injectable()
 export class BoardService {
