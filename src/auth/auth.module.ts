@@ -8,9 +8,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from 'src/entities';
 import { RrsStrategy } from './strategies/rrs.strategy';
 import { JwtStrategy } from './strategies/jwt.strategy';
+import { JwtRefreshStrategy } from './strategies/jwt-refresh.strategy';
 
 @Module({
-  providers: [AuthService, RrsStrategy, JwtStrategy],
+  providers: [AuthService, JwtStrategy, JwtRefreshStrategy, RrsStrategy],
   controllers: [AuthController],
   imports: [
     ConfigModule,
