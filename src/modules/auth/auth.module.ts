@@ -10,13 +10,14 @@ import { RrsStrategy } from './strategies/rrs.strategy';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { JwtRefreshStrategy } from './strategies/jwt-refresh.strategy';
 import { User } from 'src/modules/user/entities/user.entity';
+import { Timezone } from '../user/entities/timezone.entity';
 
 @Module({
   providers: [AuthService, JwtStrategy, JwtRefreshStrategy, RrsStrategy],
   controllers: [AuthController],
   imports: [
     ConfigModule,
-    TypeOrmModule.forFeature([User]),
+    TypeOrmModule.forFeature([User, Timezone]),
     JwtModule.registerAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({

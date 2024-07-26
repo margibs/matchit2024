@@ -1,11 +1,12 @@
-import { Controller, Post, Request, UseGuards } from '@nestjs/common';
+import { Body, Controller, Post, Request, UseGuards } from '@nestjs/common';
 import { AuthService } from '../services/auth.service';
 import { RrsAuthGuard } from '../guards/rrs.auth.guard';
 import { JwtRefreshAuthGuard } from '../guards/jwt-refresh.auth.guard';
+import { CreateUserDto } from 'src/modules/user/dtos/create-user.dto';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(private readonly authService: AuthService) {}
 
   @UseGuards(RrsAuthGuard)
   @Post('login')
@@ -14,7 +15,9 @@ export class AuthController {
   }
 
   @Post('register')
-  async register() {}
+  async register(@Body() createUserDto: CreateUserDto) {
+    return this.authService.register(createUserDto);
+  }
 
   @UseGuards(JwtRefreshAuthGuard)
   @Post('refresh')

@@ -1,8 +1,13 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
+import { InjectRepository } from '@nestjs/typeorm';
+import { CreateUserDto } from 'src/modules/user/dtos/create-user.dto';
+import { UserCreationDto } from 'src/modules/user/dtos/user-creation.dto';
+import { Timezone } from 'src/modules/user/entities/timezone.entity';
 import { User } from 'src/modules/user/entities/user.entity';
 import { UserService } from 'src/modules/user/services/user.service';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class AuthService {
@@ -10,6 +15,8 @@ export class AuthService {
     private readonly configService: ConfigService,
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
+    @InjectRepository(Timezone)
+    private readonly timezoneRepository: Repository<Timezone>,
   ) {}
   async validateUser(
     email: string,
@@ -46,6 +53,29 @@ export class AuthService {
       accessToken,
       refreshToken,
     };
+  }
+
+  async register(createUserDto: CreateUserDto) {
+    const password =
+      createUserDto.password ||
+      `${createUserDto.rrs_token}${this.configService.get('PASSWORD_GEN_SECRET')}`;
+
+    const timezone = await this.timezoneRepository.findOne({
+      where: { name: createUserDto.timezoneName },
+    });
+
+    if (!timezone) {
+      throw new NotFoundException(
+        `Timezone ${createUserDto.timezoneName} not found`,
+      );
+    }
+
+    const userCreationDto = new UserCreationDto();
+    Object.assign(userCreationDto, createUserDto);
+    userCreationDto.password = password;
+    userCreationDto.timezone = timezone;
+    const user = await this.userService.create(userCreationDto);
+    return this.login(user);
   }
 
   async refreshToken(user: User) {
