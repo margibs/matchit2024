@@ -1,9 +1,11 @@
+import { Board } from 'src/modules/board/entities/board.entity';
 import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
   UpdateDateColumn,
+  ManyToOne,
 } from 'typeorm';
 
 export enum WinningCombinationStatus {
@@ -25,8 +27,8 @@ export class WinningCombination {
   @Column()
   description: string;
 
-  @Column({ name: 'board_id' })
-  boardId: number;
+  @ManyToOne(() => Board, (board) => board.winningCombinations)
+  board: Board;
 
   @Column('decimal', { precision: 10, scale: 2 })
   price: number;

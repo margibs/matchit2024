@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { CreateWinningCombinationDto } from './dtos/create-winning-combination.dto';
-import { UpdateWinningCombinationDto } from './dtos/update-winning-combination.dto';
+import { CreateWinningCombinationDto } from '../dtos/create-winning-combination.dto';
+import { UpdateWinningCombinationDto } from '../dtos/update-winning-combination.dto';
 
 @Injectable()
 export class WinningCombinationService {

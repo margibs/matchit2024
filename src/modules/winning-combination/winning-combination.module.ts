@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { WinningCombinationService } from './winning-combination.service';
-import { WinningCombinationController } from './winning-combination.controller';
+import { WinningCombinationController } from './controllers/winning-combination.controller';
+import { WinningCombinationService } from './services/winning-combination.service';
 
 @Module({
   controllers: [WinningCombinationController],

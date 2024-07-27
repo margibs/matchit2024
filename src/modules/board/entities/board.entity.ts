@@ -7,6 +7,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { Game } from 'src/modules/game/entities/game.entity';
+import { WinningCombination } from 'src/modules/winning-combination/entities/winning-combination.entity';
 
 @Entity('boards')
 export class Board {
@@ -21,6 +22,12 @@ export class Board {
 
   @OneToMany(() => Game, (game) => game.board)
   games: Game[];
+
+  @OneToMany(
+    () => WinningCombination,
+    (winningCombination) => winningCombination.board,
+  )
+  winningCombinations: WinningCombination[];
 
   @CreateDateColumn()
   createdAt: Date;
