@@ -1,4 +1,5 @@
 import { Board } from 'src/modules/board/entities/board.entity';
+import { GameUser } from 'src/modules/game/entities/game-user.entity';
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -6,6 +7,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   ManyToOne,
+  OneToMany,
 } from 'typeorm';
 
 export enum WinningCombinationStatus {
@@ -48,4 +50,7 @@ export class WinningCombination {
 
   @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
+
+  @OneToMany(() => GameUser, (gameUser) => gameUser.winningCombination)
+  gameUsers: GameUser[];
 }
