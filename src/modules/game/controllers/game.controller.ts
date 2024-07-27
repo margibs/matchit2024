@@ -7,6 +7,7 @@ import {
   Patch,
   Param,
   UseGuards,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { CurrentUser } from 'src/common/decorator/current-user.decorator';
 
@@ -16,7 +17,6 @@ import { User } from 'src/modules/user/entities/user.entity';
 import { GameService } from '../services/game.service';
 import { CreateGameDto } from '../dtos/create-game.dto';
 import { CreateGameUserDto } from '../dtos/create-game-user.dto';
-import { UpdateGameUserDto } from '../dtos/update-game-user.dto';
 import { UpdateGameDto } from '../dtos/update-game.dto';
 
 @UseGuards(JwtAuthGuard)
@@ -37,12 +37,12 @@ export class GameController {
     return this.gameService.createPlayerNumberPick(createGameUserDto, user);
   }
 
-  @Post('save-draw')
+  @Post('save-draw/:id')
   createPlayerDraw(
-    @Body() updateGameUserDto: UpdateGameUserDto,
+    @Param('id', ParseIntPipe) id: number,
     @CurrentUser() user: User,
   ) {
-    return this.gameService.createPlayerDraw(updateGameUserDto, user);
+    return this.gameService.createPlayerDraw(id, user);
   }
 
   @Get()

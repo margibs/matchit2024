@@ -11,7 +11,6 @@ import {
   getNumberDraw,
 } from 'src/common/utils/game.utils';
 import { CreateGameUserDto } from '../dtos/create-game-user.dto';
-import { UpdateGameUserDto } from '../dtos/update-game-user.dto';
 import { positionTimeMap } from 'src/common/constants/constants';
 
 import { Board } from 'src/modules/board/entities/board.entity';
@@ -193,7 +192,7 @@ export class GameService {
     return gameUser;
   }
 
-  async createPlayerDraw(updateGameUserDto: UpdateGameUserDto, user: User) {
+  async createPlayerDraw(gameId: number, user: User) {
     console.debug({ user });
     const { name: timezoneName } = user.timezone;
 
@@ -201,10 +200,7 @@ export class GameService {
     const currentHour = getUserLocalTime(timezoneName, 'H');
     const userLocalTime = getUserLocalTime(timezoneName);
 
-    const game = await this.getGameWithDateAndId(
-      userLocalTime,
-      updateGameUserDto.gameId,
-    );
+    const game = await this.getGameWithDateAndId(userLocalTime, gameId);
 
     // Get playerNumbers
     const gameUser = await this.gameUserRepository.findOne({
