@@ -39,8 +39,6 @@ export class AuthService {
       sub: { userId: user.id },
     };
 
-    delete user.password;
-
     const accessToken = this.jwtService.sign(payload);
 
     const refreshToken = this.jwtService.sign(payload, {

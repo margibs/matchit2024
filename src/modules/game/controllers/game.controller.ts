@@ -18,8 +18,12 @@ import { GameService } from '../services/game.service';
 import { CreateGameDto } from '../dtos/create-game.dto';
 import { CreateGameUserDto } from '../dtos/create-game-user.dto';
 import { UpdateGameDto } from '../dtos/update-game.dto';
+import { GameUserResponseDto } from '../dtos/game-user-response.dto';
+import { plainToInstance } from 'class-transformer';
+import { ApiTags } from '@nestjs/swagger';
 
 @UseGuards(JwtAuthGuard)
+@ApiTags('games')
 @Controller('games')
 export class GameController {
   constructor(private readonly gameService: GameService) {}
@@ -30,11 +34,15 @@ export class GameController {
   }
 
   @Post('player-number-pick')
-  createPlayerNumberPick(
+  async createPlayerNumberPick(
     @Body() createGameUserDto: CreateGameUserDto,
     @CurrentUser() user: User,
-  ) {
-    return this.gameService.createPlayerNumberPick(createGameUserDto, user);
+  ): Promise<GameUserResponseDto> {
+    const gameUser = this.gameService.createPlayerNumberPick(
+      createGameUserDto,
+      user,
+    );
+    return plainToInstance(GameUserResponseDto, gameUser);
   }
 
   @Post('save-draw/:id')

@@ -10,8 +10,10 @@ import {
 import { WinningCombinationService } from '../services/winning-combination.service';
 import { CreateWinningCombinationDto } from '../dtos/create-winning-combination.dto';
 import { UpdateWinningCombinationDto } from '../dtos/update-winning-combination.dto';
+import { ApiTags } from '@nestjs/swagger';
 
-@Controller('winning-combination')
+@ApiTags('winning-combinations')
+@Controller('winning-combinations')
 export class WinningCombinationController {
   constructor(
     private readonly winningCombinationService: WinningCombinationService,

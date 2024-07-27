@@ -12,7 +12,9 @@ import { BoardService } from '../services/board.service';
 
 import { CreateBoardDto } from '../dtos/create-board.dto';
 import { UpdateBoardDto } from '../dtos/update-board.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('boards')
 @Controller('boards')
 export class BoardController {
   constructor(private readonly boardService: BoardService) {}
