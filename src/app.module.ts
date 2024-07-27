@@ -3,13 +3,13 @@ import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { config } from './config/typeorm.config';
 
 import { AuthModule } from './modules/auth/auth.module';
-import { UserModule } from './modules/user/user.module';
-import { GameModule } from './modules/game/game.module';
 import { BoardModule } from './modules/board/board.module';
-
-import { config } from './config/typeorm.config';
+import { GameModule } from './modules/game/game.module';
+import { UserModule } from './modules/user/user.module';
+import { WinningCombinationModule } from './modules/winning-combination/winning-combination.module';
 
 @Module({
   imports: [
@@ -19,6 +19,7 @@ import { config } from './config/typeorm.config';
     GameModule,
     BoardModule,
     AuthModule,
+    WinningCombinationModule,
   ],
   controllers: [AppController],
   providers: [AppService],

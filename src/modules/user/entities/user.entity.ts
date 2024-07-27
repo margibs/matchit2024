@@ -21,7 +21,7 @@ export enum UserRole {
   SPONSOR = 'sponsor',
 }
 
-@Entity()
+@Entity('users')
 export class User {
   @PrimaryGeneratedColumn()
   id: number;

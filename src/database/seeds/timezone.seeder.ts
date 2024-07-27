@@ -96,7 +96,7 @@ export default class TimezoneSeeder implements Seeder {
     try {
       // Truncate the table
       await queryRunner.query(
-        `TRUNCATE TABLE timezone RESTART IDENTITY CASCADE`,
+        `TRUNCATE TABLE timezones RESTART IDENTITY CASCADE`,
       );
 
       // Bulk insert the timezones

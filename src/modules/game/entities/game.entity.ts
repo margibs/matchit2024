@@ -22,7 +22,7 @@ export enum Status {
   PAUSED = 'paused',
 }
 
-@Entity()
+@Entity('games')
 @Index('IDX_STATUS', ['status']) // Index on status field
 export class Game {
   @PrimaryGeneratedColumn()

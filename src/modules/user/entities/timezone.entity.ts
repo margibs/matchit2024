@@ -8,7 +8,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity()
+@Entity('timezones')
 export class Timezone {
   @PrimaryGeneratedColumn()
   id: number;

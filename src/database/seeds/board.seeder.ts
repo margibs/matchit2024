@@ -14,7 +14,7 @@ export default class BoardSeeder implements Seeder {
 
     try {
       // Truncate the table
-      await queryRunner.query(`TRUNCATE TABLE board RESTART IDENTITY CASCADE`);
+      await queryRunner.query(`TRUNCATE TABLE boards RESTART IDENTITY CASCADE`);
 
       // Bulk insert the timezones
       await queryRunner.manager
