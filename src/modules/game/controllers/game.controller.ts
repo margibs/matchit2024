@@ -1,10 +1,8 @@
 import {
   Body,
   Controller,
-  Delete,
   Get,
   Post,
-  Patch,
   Param,
   UseGuards,
   ParseIntPipe,
@@ -17,7 +15,6 @@ import { User } from 'src/modules/user/entities/user.entity';
 import { GameService } from '../services/game.service';
 import { CreateGameDto } from '../dtos/create-game.dto';
 import { CreateGameUserDto } from '../dtos/create-game-user.dto';
-import { UpdateGameDto } from '../dtos/update-game.dto';
 import { GameUserResponseDto } from '../dtos/game-user-response.dto';
 import { plainToInstance } from 'class-transformer';
 import { ApiTags } from '@nestjs/swagger';
@@ -71,15 +68,5 @@ export class GameController {
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.gameService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateGameDto: UpdateGameDto) {
-    return this.gameService.update(+id, updateGameDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.gameService.remove(+id);
   }
 }

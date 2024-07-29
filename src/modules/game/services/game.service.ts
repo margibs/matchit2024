@@ -1,6 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateGameDto } from '../dtos/create-game.dto';
-import { UpdateGameDto } from '../dtos/update-game.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, LessThan, MoreThan, Repository } from 'typeorm';
 import {
@@ -109,7 +108,7 @@ export class GameService {
     });
 
     if (!gameUser) {
-      return 'Pick player numbers first';
+      throw new NotFoundException('Pick player numbers first');
     }
 
     // get user draws check if user draws exist
@@ -125,16 +124,6 @@ export class GameService {
     const currentHour = +userLocalHour === 0 ? 24 : +userLocalHour;
 
     return createGameFourDrawLayout(currentHour, userDraws);
-  }
-
-  // TODO: Test this function
-  async update(id: number, updateGameDto: UpdateGameDto) {
-    return this.gameRepository.update(id, updateGameDto);
-  }
-
-  // TODO: Test this function
-  async remove(id: number) {
-    return await this.gameRepository.delete(id);
   }
 
   async activeGames(user: User) {
