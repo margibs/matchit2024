@@ -18,6 +18,7 @@ import { Game, Status } from '../entities/game.entity';
 import { GameUser } from '../entities/game-user.entity';
 import { User } from 'src/modules/user/entities/user.entity';
 import { UserDraw } from '../entities/user-draw.entity';
+import { WinningCombination } from 'src/modules/winning-combination/entities/winning-combination.entity';
 
 @Injectable()
 export class GameService {
@@ -30,6 +31,8 @@ export class GameService {
     private readonly gameUserRepository: Repository<GameUser>,
     @InjectRepository(UserDraw)
     private readonly userDrawRepository: Repository<UserDraw>,
+    @InjectRepository(WinningCombination)
+    private readonly winningCombinationRepository: Repository<WinningCombination>,
     private readonly dataSource: DataSource,
   ) {}
   async create(createGameDto: CreateGameDto, user: User) {
@@ -262,5 +265,44 @@ export class GameService {
     }
 
     return game;
+  }
+
+  //TODO: Double check function below
+  async checkWinner(playerNumbers: number[]): Promise<WinningCombination[]> {
+    const winningCombinations = await this.winningCombinationRepository.find();
+    const winners: WinningCombination[] = [];
+
+    for (const combination of winningCombinations) {
+      // Ensure positions is treated as an array of arrays
+      const positions: number[][] = Array.isArray(combination.positions)
+        ? combination.positions
+        : JSON.parse(combination.positions as any);
+
+      for (const position of positions) {
+        if (
+          this.isWinningCombination(
+            playerNumbers,
+            position,
+            combination.matchCount,
+          )
+        ) {
+          winners.push(combination);
+          break; // Move to the next combination
+        }
+      }
+    }
+
+    return winners;
+  }
+
+  private isWinningCombination(
+    playerNumbers: number[],
+    position: number[],
+    requiredMatches: number,
+  ): boolean {
+    const matchedNumbers = position.filter((num) =>
+      playerNumbers.includes(num),
+    );
+    return matchedNumbers.length >= requiredMatches;
   }
 }
