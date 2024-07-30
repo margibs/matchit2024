@@ -243,6 +243,9 @@ export class GameService {
       };
 
       //TODO: Check for Winnings
+      //TODO: get userDraws
+      //TODO: get userDraw length minimum of 6 and matching
+      // await this.checkWinner(gameUser.playerNumbers);
     }
 
     return { message: 'Already drawn' };
